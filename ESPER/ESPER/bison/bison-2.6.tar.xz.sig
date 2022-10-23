@@ -1,0 +1,7 @@
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (Darwin)
+
+iEYEABECAAYFAlAIF3EACgkQDdyqMnjVJk5mVQCdGPOUauM+vfagv7+fVJve6qMh
+um8An28dVfm4LN2pi2K9c/7aBFuuHtAK
+=YvdZ
+-----END PGP SIGNATURE-----

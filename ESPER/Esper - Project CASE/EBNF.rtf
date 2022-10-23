@@ -1,0 +1,1222 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf340
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww14460\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 /* An EBNF Tree for CASE\
+\
+================================\
+*/\
+\
+/*******BASE********/\
+\
+ROOT := PACKAGE, IMPORT, A\
+A ::= SENTENCE\
+SENTENCE ::= BACKTICK EXPRESSION | EXPRESSION | EXPRESSION_TO_LIST EXPRESSION\
+EXPRESSION ::= EXPRESSION | TERM | NMSPC\
+TERM ::= TERM | SUM | FACTOR | MATH | PARAN | ARRAY | FUNCTION | STREAMED |\
+	INSTANTIATING_CLASS | EMBED | THIS | PERIOD |  CONTROLSTRUTURES | WHERE | SUPER\
+/***********BACKTICK EXPRESSION*********//\
+/***********AUTOMATICALLY EVALUATE EXPRESSION**************/\
+\
+BACKTICK := \'91`;, EXPRESSION\
+\
+/***********FRONT TICK EXPRESSIONT O LIST EXPRESSION**********/\
+\
+FRONTTICK := \'91, EXPRESSION\
+\
+\
+/************PERIOD OPERATOR - join two braced statements ************/\
+\
+\
+PERIOD OPERATOR := LBRACKET, TERM, RBRACKET, \'91.\'92, LBRACKET, TERM, RBRACKET\
+\
+\
+\
+/***********PACKAGE***************/\
+\
+PACKAGE := \'91package\'92, STRING\
+\
+/**************IMPORT****************/\
+\
+IMPORT := IMPORT | \'91import\'92, STRING\
+\
+/********NAMESPACE**************/\
+\
+NMSPC := STRING, LBRACKET, TERM, RBRACKET\
+\
+\
+/******ARITHMETIC TOKENS************/\
+\
+SUM ::= NUMERAL, \'91+\'92, NUMERAL\
+	   | NUMERAL \'91-\'91 NUMERAL\
+FACTOR ::= NUMERAL \'91*\'92 NUMERAL\
+	| NUMERAL \'91/\'91 NUMERAL\
+NUMERAL := 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0\
+\
+EQUALS := \'91=\'91\
+\
+/*******ALPHABETIC TOKENS************/\
+\
+LETTERS = LETTERS a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z | \
+CAPITALS = CAPITALS A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z\
+\
+CLASSLETTERS = a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z \
+CLASSCAPITALS = A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z\
+\
+FULL ALPHABET := FULLALPHABET | LETTERS | CAPITALS\
+\
+\
+CAMELCASEALPHABET :== CLASSLETTERS, CLASSLETTERS, FULLALPHABET\
+\
+WORD := NUMERAL | ALPHABET | WORD\
+\
+ALPHAVARIABLE := WORD | VARIABLENAME\
+\
+/*********DATATYPES**********/\
+\
+STRING := \'91\'93\'94, LETTERS, \'93;\'94\
+\
+/**********ARITHMETIC OPERATORS********/\
+\
+MATH :== LEFTPARAN, BINARYMATH | UNARYMATH | MATH, RIGHTPARAN\
+BINARYMATH :== NUMERAL, BINARITHMETICOP , NUMERAL\
+UNARYMATH :== UNARITHMETICOP NUMERAL\
+SUPEROP :== \'91++\'92 | \'91\'97\'91\
+BINARYARITHMETICOP := \'91+\'92, \'91-\'91. \'91/\'91, \'91*\'92, \'91mod\'92, \'91div\'92, \'91rem\'92, \'91<<\'91, \'91>>\'92,\'92=\'91,\'92+=\'91, \'91-=\'91, \'91/=\'91, \'91*=\'91\
+UNARYARITHMETICOP := \'91-\'91, \'91!\'92,^,\'92%\'92, \'91++\'92, \'91\'97\'91\
+LEFTPARAN :== \'91(\'91\
+RIGHTPARAN :== \'91)\'92\
+RIGHTARROW := \'91==>\'92\
+LEFTARROW := \'91 <==\'91\
+\
+\
+/**************BOOLEAN OPERATORS*********************/\
+\
+TRUE := \'91true\'92\
+FALSE := \'91false\'92\
+NOT := \'91not\'92\
+ISTRUE := \'91istrue\'92\
+ISFALSE \'91isfalse\'92\
+AND := \'91and\'92\'92\
+OR := \'91or\'92\
+XOR := \'91xor\'92\
+NOTOR :=\'91notor\'92\
+NOTAND := \'91notand\'92\
+LIKE := \'91like\'92\
+AMPERSAND := \'91&\'92\
+BITWISEOR := \'91|\'92\
+BITWISEXOR := \'91\\|\'92\
+BITWISENOT := \'91~~\'92\
+BOOLEANEQUALS: \'91==\'91\
+FLOOR := \'93floor\'92\
+CEILING := \'91ceiling\'92\
+ROUNDS := \'92roundabs\'92\
+RAND := \'91rand\'92\
+ALSO := \'91also\'92\
+LEN := \'91len\'92\
+\
+ISLETTER := isletter\
+ISDIGIT A:= isdigit\
+ISWHITESPACE := iswhitespace\
+ISUPPERCASE := isuppercase\
+ISLOWERCASE := islowercase\
+TOUPPERCASE := touppercase\
+TOLOWERCASE := tolowercase\
+\
+BOOLEANOPS := TRUE | FALSE | NOT | ISTRUE | ISFALSE | AND | OR | XOR | NOTOR | NOTAND | LIKE |\
+			AMPERSAND | BITWISEOR | BITWISEXOR | BITWISE NOT | BOOLEANEQUALS |\
+			| FLOOR | CEILLING | ROUNS | RAND | ALSO | LEN | ISLETTER | ISDIGIT | ISWHITESPACE |\
+			IS UPPERCASE | ISLOWERCASE | TOUPPERCASE | TOLOWERCAWSE\
+\
+\
+/************ARRAY**********************/\
+\
+/***\
+Array [ ] myArray\
+\
+**/\
+ARRAY :== \'91array\'92[\'91 NUMERAL \'91]\'92  CAMELCASEALPHABET  \
+\
+/***********ACCESS MODIFIERS***********/]\
+\
+ACCESS MODIFIER :== \'91public\'92 | \'91protected\'92 | \'91internal\'92 | \'91private | package | friend | trust | function | virtual |\
+				\'91const\'92 | MVC MVCBINDING | \'91flux\'92\
+\
+MVC: = @controller | @model | @view \
+\
+MVCBINDING := CLASSOBJECT \'91bind\'92 CLASSOBJECT\
+MVCONEWAYBIND := CLASSOBJECT \'91onewaybind\'92 CLASSOBJECT\
+\
+\
+\
+\
+\
+/**********resetricting who is able to use a function********/\
+\
+RTARGET := \'91target@\'91 FUNCTIONLIST\
+FUNCTIONALIST := FUNCTIONNAME | FUNCTIONALIST\
+\
+\
+\
+/**********GENERIC OPERATOR***********/\
+\
+GENTYPEOP := \'91<T>\'92\
+\
+\
+/**********FUNCTIONS*******************/\
+\
+\
+\
+FUNCTION ::= \'91[\'91 FUNCTIONHEADER FUNCTIONBODY \'92]\'92\
+\
+FUNCTIONHEADER ::= OPERATOROVERLOAD ACCESSMODIFIER SYNCHRONIZED EXPLICIT UNCTIONNAME 											FUNCTIONPARAMS RETURN\
+\
+\
+FUNCTIONPARAMS ::= NEED DEEPM CONSTM FUNCTIONNAME FUNCDATATYPE | FUNCTIONPARAMS | 											FUNCTIONNAMEDPARAMETER\
+CONSTM: empty | const\
+DEEPM: empty | deep\
+NEED: empty | need\
+REF: &\
+FUNCTIONDATATPE ::= DATATYPE | DATATYPE, WILDCARD\
+FUNCTION BODY ::= TERM | FUNCTION\
+RETURN ::== \'91return\'92, TUPLE | SET | VARIABLE TERM /****NOT SURE ABOUT THE TERM*****/\
+\
+SYNCHRONIZED := \'91synchronized\'92 | empty string\
+/** synchronized causes function to take hold of a mutex while this function executes*/\
+\
+\
+FUNCTIONNAMEDPARAMETER := DATATYPE ALPHANUMERAL EQUALSOP WORD\
+/******alternate paramters********/\
+\
+FUNCTIONALALTP := FUNCTIONALTPARAMS \
+FUNCTIONALTPARAM:= FUNCTIONALTPARAMS : FUNCTIONALALTPARAMS\
+FUNCTIONALTERNATEPARAMS := FUNCTIONALALTPARAM | FUNCTIONALTERNATEPARAMS | FUNCTIONALTP\
+\
+\
+/***************IOPERATOR OVVERLOADING************/\
+\
+\
+OPERATOROVERLOAD := OPERATOR, \'91operator\'92 \
+\
+OPERATOR := SUPEROP :== \'91++\'92 | \'91\'97\'91 | CUSTOMOPERATOR\
+BINARYARITHMETICOP := \'91+\'92, \'91-\'91. \'91/\'91, \'91*\'92, \'91mod\'92, \'91div\'92, \'91rem\'92, \'91<<\'91, \'91>>\'92,\'92=\'91,\'92+=\'91, \'91-=\'91, \'91/=\'91, \'91*=\'91\
+UNARYARITHMETICOP := \'91-\'91, \'91!\'92,^,\'92%\'92, \'91++\'92, \'91\'97\'91\
+LEFTPARAN :== \'91(\'91\
+RIGHTPARAN :== \'91)\'92\
+RIGHTARROW := \'91==>\'92\
+LEFTARROW := \'91 <==\'91\
+\
+\
+/*******ASSIGNING FUNCTIONS TO VARIABLES*********/\
+\
+FUNCASSIGN := VARIABLENAME EQUALSOP FUNCTIONNAME\
+\
+\
+/******SHALLOW COPY*********/\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\b \cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\b0 \cf0 SHALLOWCOPY := VARIABLENAME TILDE FUNCTIONNAME
+\b \
+
+\b0 \
+\
+\
+/******STRING COPY **********/\
+/***EQUIV OF REFERENCE*******/\
+\
+STRINGCOPY1 := DATATYPEA \'91&=\'91 DATATYPEB\
+\
+/***EQUIV OF CONTENTES******/\
+STRINGCOPY2 := DATATYPEA = DATATYYPEB\
+\
+/****STRING AS A BASE CLASS*********/\
+\
+BOOLEANSTRING := DATATYPEA \'91=$CLASSNAME\'92\
+\
+\
+\
+/**********CALLING USING INFIX****************/\
+\
+FUNCTION HEADER := ACCESSMODIFIER SYNCHRONIZD EXPLICIT LPAREN FUNCTIONNAME FUNCTIONALPARAMS\
+\
+\
+/**********COLON OPERATOR FOR COMPOSITION**********/\
+\
+COLONOP:  FUNCTIONNAME, \'91:\'92 FUNCTIONHEADER | COLONOP2\
+COLONOP2: FUNCTIONNAME, \'91:\'92 FUNCTIONNAME | FUNCTIONNAME | COLONOP2\
+\
+/*********FUNCTION CONCATENATION\
+\
+\
+CONCAT:  FUNCTIONNAME, \'91:@\'91 FUNCTIONHEADER | CONCAT2\
+CONCAT2: FUNCTIONNAME, \'91@\'91\'92 FUNCTIONNAME | FUNCTIONNAME | CONCAT2\
+\
+\
+/************VIRTUAL KEYWORD*********/\
+\
+VIRTUAL := \'91virtual\'92\
+\
+/************DATA TYPES****************/\
+\
+DATATYPE::= \'91PRIMITIVETYPE | CUSTOMDATATYPE | GENTYPEOP\
+\
+\
+/**************CLASS INITIALIZATION ******************/\
+/* \
+*\
+*	String->Object->Main\
+*          #public class AppleClass\
+*	\
+*	[ public void function1 \
+*	  code\
+	]\
+\
+	[ public void function 2\
+	code2\
+	]\
+	#end class\
+*\
+/*\
+/***********************************************\
+\
+CLASS INITIALIZATION := TYPECONSTRUCTOR, CLASSHEADER, CLASSBODY, ENDCLASS\
+\
+TYPECONSTRUCTOR := \'91String\'92 TYPES\
+\
+TYPEOPERATOR := ::\'92VARIABLENAME\
+\
+TYPE2OPERATOR := VARIABLENAME, \'91::\'92\
+\
+TYPES :== \'91->\'92, TYPE\
+TYPE ::= ALPHABET | NUMERAL | VOID | TYPE \
+\
+CLASS HEADER := HASHTAG, ACCESSMODIFIER, MISCMODIFIERES \'92class\'92, FULLALPHABET, 			THROWS\
+\
+CLASS BODY := CLASSFIELDS | PROPERTIES\
+\
+CLASSIFIEDS := CLASSIFIEDS | MEMBERS | FUNCTION\
+\
+MEMBERS := TERM\
+\
+ENDLESS := \'91end class\'92\
+/* takes exception and passes upwards in class hierarchy\
+THROWS := \'91throws\'92, EXCEPTION\
+\
+\
+MISCMODIFIERES := MISCMODIFIERES | IMPLEMENTS CLASSTYPE | EXTENDS CLASSTYPE\
+\
+PROPERTIES := ACCESSMODIFIER, DATATYPE, NAME, LBRACE GETPROPERTY RBRACE, LBRACE SETPROPERTY RBRACE\
+\
+GET PROPERTY := GET LBRACE MEMBERS RIGHTBRACE\
+\
+SET PROPERTY := SET LBRACE MEMBERS RIGHTBRACE\
+\
+/**************INTERFACES*************/\
+\
+INTERFACEBODY := FUNCTION | INTERFACEBODY\
+INTERFACEBODY := INTERFACES\
+INTRFACES := INTERFACE | INTEFACES\
+INTERFACE := ACCESSMODIFIER, INTERFACEBODY, IMPLEMENTS, CLASSNAME\
+\
+\
+/***************MIXED IMPLEMENTES AND EXTENDS\
+\
+\
+INTERFACE OOPCLASSES \
+OOPLCASSES: EXTENDS | IMPLEMENTS\
+EXTENDS: EXTEND | EXTENDS\
+IMPLEMENTS: IMPLEMENT | IMPLEMENTS\
+EXTEND: EXTENDOP, CLASSNAME\
+IMPLEMENT: IMPLEMENTOP, CLASSNAME\
+\
+\
+\
+/***IMPLEMENTING*****/\
+\
+IMPLEMENT := ACCESSSMODIFIER \
+\
+/***************TUPLES***************/\
+\
+TUPLE::== TUPLE_BEGIN, TUPLE MIDDLE, TUPLE_END\
+\
+TUPLE_BEGIN ::= \'91(\'91\
+TUPLE CONTENT = NUMERAL | NUMERAL, TUPLECOMMA, TUPLE_MIDDLE\
+TUPLE_MIDDLE ::= NUMERAL \
+TUPLE_END ::= \'91)\'92\
+\
+/*************STREAMS*****************/\
+\
+\
+STREAMED = \'91stream\'92, STREAMLETTER, EQUALS, DATATYPE\
+\
+\
+/************VARIABLES AND CLASSES**************/\
+\
+\
+/** Defining classes and variables\
+*\
+*\
+*  MyClass myClass = new <>()\
+*\
+*/\
+\
+\
+INSTANTIATE := CLASSNAME VOLATILE VARIABLENAME EQUALS NEW TYPEINIT\
+\
+CLASSNAME := FULLALPHABET\
+\
+VOLATILE = \'91volatile\'92 | emptystring\
+\
+VARIABLENAME := \'91$\'92, CAMELCASE\
+\
+EQUALS := \'91=\'91\
+\
+NEW := \'91new\'92\
+\
+TYPEINIT = CUSTOMDATATYPE | GENERICTYPE \
+\
+GENERICTYPE = \'91<>()\'92\
+\
+/*\
+* String->Object->Main\
+*#public class \
+*\
+*/\
+\
+/****************************************\
+*  \
+*      Instantiation of Variables\
+*\
+*/\
+\
+CLASS_INSTANTIATION := \'91$\'92, CUSTOMDATATYPE\
+\
+\
+CLASS_DEFINITION :=  \'91$\'92 , CUSTOMDATATYPE, STREAMLETTER, VARIABLENAME,				 TYPEINIT\
+\
+STREAMLETTER := CLASSLETTERS\
+\
+VARIABLENAME := CAMELCASEALPHABET\
+\
+\
+\
+\
+\
+/**************ATOM*********************/\
+\
+ATOMS ::== ATOM_DEFINITION\
+\
+ATOM_DEFINITION := ATOM, DATATYPE, ATOMNAME\
+\
+ATOM := \'91atom\'92\
+\
+ATOM NAME = WORD\
+\
+\
+/*********************ADVANCED DATA TYPES****************/\
+\
+ADATATYPE := MATRIX | VECTOR\
+\
+\
+\
+\
+\
+/*************Assignment*****************************\
+\
+\
+ASSIGNMENT ::= VARIABLENAME, \'91=\'91, WORD\
+\
+/*************ANNOTATIONS************************\
+\
+ANNOTATION =- \'91@\'91\
+\
+\
+/***************ALTERNATE CONSTRUCTORS********************/\
+\
+ALTERNATECONSTRUCTORS := ALTERNATECONSTRUCTORS | ALTERNATECONSTRUTOR\
+\
+\
+ALTERNATECONSTRUCTOR := \'91[\'91, ACCESSMODIFIER, \'91constructor\'92, CONSTRUCTNAME, 				ACPARAMETERLIST, ACBODY, ACRETURN \'91]\'92\
+\
+CONSTRUCTNAME := WORD\
+\
+ACPARAMETERLIST := ACNAME ACDATATYPE | ACPARAMETERLIST\
+\
+\
+ACNAME := WORD\
+\
+ACDATATYPE := DATATYPE | DATATYPE, WILDCARD\
+\
+\
+\
+FUNCTION ::= \'91[\'91 FUNCTIONHEADER FUNCTIONBODY \'92]\'92\
+\
+\
+ACBODY ::= TERM\
+ACRETURN ::== \'91return\'92, TUPLE | VARIABLE\
+\
+\
+\
+\
+/***********EMBEDDING MULTIPLE APPLICATIONS WITHIN ONE***?***********************/\
+\
+EMBED = ANNOTATION, \'91application\'92, \'91=\'91, STRING\
+EMBEDDABLE = ANNOTATION, WORD, \'91.app\'92, EMBEDDABLEBODY \
+\
+\
+/***********THIS COMMAND**************************************/\
+\
+\
+THIS := \'92this\'92\
+\
+\
+\
+/*******************scope operator************************/\
+\
+SCOPE := \'91$scope\'92\
+\
+/*******************\
+\
+/********************RELATIONS*********************/\
+\
+GREATERTHAN = \'91>\'92\
+LESSERTHAN = \'91<\'91\
+EQUALS = \'91=\'91\
+GREATEROREQUAL = \'91>=\'91\
+LESSEROREQUAL = \'91<=\'91\
+NOTEQUAL = \'91<>\'92\
+\
+\
+RELATIONSOPERATOR = GREATERTHAN | LESSERTHAN | EQUALS | GREATEROREQUAL | LESSEROREQUAL | NOTEQUAL\
+\
+\
+/*******************Single Statement For loop**************************/\
+\
+LEFTBRACKET = \'91\{\'91\
+RIGHTBRACKET = \'91\}\'92\
+\
+FORONE := \'91for\'92, \'91(\'91, DATATYPE, VARIABLENAME, SEMICOLON, RELATION, SEMICOLON, INCREMENT, \'91)\'92 \'92SINGLEITEMBRACKET\
+\
+SEMICOLON := \'91;\'92\
+\
+\
+RELATION :== ALPHAVARIABLE, RELATIONSOPERATOR,  ALPHAVARIABLE\
+\
+/******************Bracket Code 2 or more commands ***************/\
+\
+SINGLEITEMBRACKET := LEFTBRACKET, BRACKETTERMS, \'91RIGHTBRACKET\
+\
+COMMA = \'91,\'92\
+\
+INNER BRACKET TERMS :=  TERM, COMMA, BRACKETERM, TERM\
+BRACKET TERM := BRACKETTERM COMMA TERM\
+\
+FOR MULTIPLE := \'91for\'92 , \'91(\'91 DATATYPE, VARIABLENAME, SEMICOLON, RELATION, SEMICOLON, INCREMENT, \'91)\'92 INNERBRACKETTERMS\
+\
+/************** NESTED BRACES FOR LOOP *********************/\
+\
+MULTINESTEDBRACKETS := \'91for\'92, \'91(\'91 DATATYPE, VARIABLENAME, SEMICOLON, RELATION, SEMICOLON, INCREMENT, \'91)\'92 NESTEDBRACKETS\
+\
+NESTED BRACKETS := NESTED BRACKETS | LEFTBRACKET, CONTENT, RIGHTBRACKET\
+CONTENT = NESTED BRACKETS | TERMS\
+\
+/**************STANDARD NOTATION FOR LOOP*******************/\
+\
+STANDARD FOR := \'91for\'92, \'91(\'91 DATATYPE, VARIABLE NAME, SEMICOLON, RELATION,\
+SEMICOLON, INCREMENT, \'91)\'92, LEFTBRACKET, TERM, RIGHTBRACKET\
+\
+\
+/****************MORE FOR LOOP NOTATION**************************/\
+/********FOR EACH BASED LOOPS********************/\
+\
+FOREACHITR := TYPECLASS ITERATOR  \'91:\'92 VARIABELNAME TERM\
+FOREACHSHRT := LPAREN TYPECLASS RPAREN  TERM \
+\
+\
+\
+\
+\
+/***************MEMORY MANAGEMENT*******************************/\
+``/****************MESSAGE PASSING*********************/\
+\
+[function():destination] [variable:destination]\
+\
+PASS_FUNCTION_MESSAGE := LEFTBRACKET, FUNCTIONCONTENTS,, RIGHTBRACKET\
+\
+PASS_VARIABLE_MESSAGE :-= LEFTBRACKET, VARIABLECONTENTS, RIGHTBRACKET\
+\
+FUNCTIONCONTENTS := FUN
+\b CTIONNAMES, COLON, DESTINATION\
+\
+VARIABLE DESTINATION := VARIABLENAMES, CO
+\b0 LON, DESTINATION\
+\
+DESTINATION := VARIABLENAME | FUNCTION\
+\
+\
+/*** send function name as a message */\
+FUNCTIONNAMES := FUNCTION\
+VARIABLENAMES: :=  VARIABLENAME\
+\
+/******************DEBUG STATEMENTS****************/\
+\
+PRINT_BUG := \'91print bug\'92, \'91(\'91, CONDITIONAL, COMMA, MESSAGE, \'91)\'92\
+CONDITIONAL := RELATION\
+MESSAGE := WORD\
+\
+/******************TRY CATCH FINALLY ********************/\
+\
+TRY_CATCH := TRY, CATCH, EXCEPTIONS, TRYCODE, FINALLY, FINALLY_CODE\
+TRY = \'91try\'92\
+CATCH = \'92catch\'92\
+EXCEPTIONS = EXCEPTIONS | EXCEPTION\
+EXCEPTION = EXCEPTION_TYPE, VARIABLE_NAME\
+EXCEPTION_TYPE := CLASSTYPE VARIABLE_NAME\
+TRY CODE := TRY_CODE |TERM | AWAIT\
+FINALLY := \'91finally\'92\
+FINALLY_CODE := TERM\
+AWAIT := await\
+\
+/*********************LAST*****************************\
+\
+LAST := \'91last\'92\
+\
+ /*************TRY CATCH WITH AUTOFALL*************/\
+\
+AUTOFALL = \'91autofall\'92, CLASSTYPE VARIABLE_NAME TERM\
+\
+/***************TRY CATCH WITH TAG COMMAND*****************/\
+\
+TAG STRING := CLASSTYPE VARIABLE EQUALS FUNCTION_NAME\
+\
+/***************MULTICATCH**************/\
+\
+MULTI CATCH = \'91tag\'92, \'91(\'91, MULTIEXCEPTIONS, \'91)\'92, TERM\
+MULTI EXCEPTIONS := MULTIEXCEPTIONSD | EXCEPTIONS\
+\
+/*************CHAIN CATCH***************/\
+\
+CHAINTAG = LPAREN, TAG, CLASSTYPE, RPAREN | CHAINTAG\
+\
+/**********DYNAMIC TYPING VS STATIC TYPING**********/\
+/*********FROZEN KEYWORD CAUSES STATIC************/\
+\
+FROZEN := LPAREN, \'91frozen\'92, LPAREN CLASSTYPE, RPAREN, RPAREN\
+\
+/**********THAW KEYWORD CAUSES DYNAMIC************/\
+\
+THAW := LPAREN, \'91thaw\'92, LPAREN, CLASSTYPE, RPAREN, RPAREN\
+\
+/************TYPECASTING***************z/\
+\
+TYPECAST := LPAREN, CLASS_TYPE, RPAREN, CLASSTYPE\
+\
+/***********ASSERT*********************//\
+\
+ASSERT := \'91assert\'92, LPAREN, TERM, RPAREN\
+\
+/**********INLINE***********************//\
+\
+INLINE := \'91inline\'92, ASSEMBLYCODE\
+\
+/*********BYTECODE*****************//\
+\
+BYTECODE := \'91bytecodce\'92, BYTECODE\
+\
+/**********NULL**********************//\
+\
+NULL = \'91null\'92\
+\
+/***********AS***********************//\
+\
+AS := \'91as\'92, MODULE_NAME\
+MODULE_NAME := WORD\
+\
+\
+/************lambda - anonymous function*************/\
+\
+\
+LAMBDAFUNCTION ::= \'91[\'91 FUNCTIONHEADER FUNCTIONBODY \'92]\'92\
+\
+LAMBDAHEADER ::= ACCESSMODIFIER LAMBDA LAMBDAPARAMS RETURN\
+LAMBDAPARAMS ::= LAMBDA  FUNCDATATYPE | LAMBDAPARAMS \
+LAMBDADATATPE ::= DATATYPE | DATATYPE, WILDCARD\
+LAMBDA BODY ::= TERM\
+\
+/***************global**************************//\
+//global variable across code\
+GLOBAL := \'91global\'92, VARIABLENAME\
+\
+\
+/************Delete object***********************//\
+DELOBJECT := DEL VARIABLENAME\
+\
+/**********commandExecute*****************/\
+\
+/***********goto*****************************/\
+\
+/***************True and false************/\
+\
+TRUE := \'91true\'92\
+FALSE := \'91false\'92\
+\
+/**********WAIT********************/\
+\
+WAIT OPERATOR := WAIT, LPAREN, RELATION, RPAREN\
+WAIT := \'91wait\'92\
+\
+/******ON SUCCESS*******************/\
+\
+ONSUCCESS := LBRACKET, FUNCTION1, SUCCESS,  FUNCTION2, RBRACKET\
+FUNCTION1 := FUNCTION\
+FUNCTION2 := FUNCTION\
+SUCCESS := \'91success\'92\
+\
+/***********THROW*********************/\
+\
+THROW STATEMENT := THROW, EXCEPTION\
+\
+/**************TEXT LITERAL************/\
+\
+TEXTLITERAL := \'91@texts:\'92, TEXTSTRING\
+TEXT STRING := WORD\
+\
+\
+/**********LOCK KEYWORD**************/\
+\
+LOCK KEYWORD := LOCK, LPAREN, VARIABLENAME, RPAREN, LBRACKET, TERM, \
+			RBRACKET\
+\
+\
+/*********AUTO*****************/\
+\
+AUTO := \'91auto\'92, VARIABLENAME\
+\
+/*************SEALED*********************/\
+\
+SEALED := \'91sealed\'92, CLASSTYPE\
+\
+/*************STATIC KEYWORD*************/\
+\
+STATIC KEYWORD := \'91static\'92, FUNCTION | \'91static\'92, VARIABLENAME\
+\
+/************ASSERT******************?\
+\
+ASSERT := \'91assert\'92, LPAREN, RELATION, RPAREN\
+\
+/**************Final**********************\
+\
+FINAL := \'91\'92final\'92, VARIABLENAME, EQUALS, WORD\
+\
+/**************Double Question Operator***********/\
+\
+QUESTIONS := VARIABLENAME, \'91??\'92\
+\
+/****************String Concatenation ***************/\
+\
+STRINGCONCAT := STRING, CONCATOPERATOR, STRING\
+CONCATOPERATOR := \'91( c )\'92\
+\
+STRINGANTICONCAT := STRING, ANTICONCAT, STRING\
+ANTICONCAT := \'91( m )\'92\
+\
+/**************Struct*****************************/\
+*\
+*     struct myStruct \{\
+*   	Integer m\
+*	Integer n\
+*	String myString\
+*        \}\
+*/\
+\
+\
+STRUCT := \'91struct\'92, STRUCTNAME, LBRACKET, STRUCTBODY, RBRACKET\
+STRUCTNAME := WORD\
+STRUCTBODY := STRUCTBODY | CLASSTYPE, VARIABLENAME\
+\
+/************** UNION ***********************/\
+\
+UNION := \'91union\'92 UNIONSNAME, LBRACKET, UNIONBODY, RBRACKET\
+UNIONSNAME := WORD\
+UNION BODY := UNIONBODY | CLASSTYPE, VARIABLENAME\
+\
+\
+/**************REQUIRES AND SATISFIES*************/\
+\
+\
+REQUIRES := \'91requires\'92\
+SATISFIES := \'91satisfies\'92\
+\
+/***************SIZEOF**************************/\
+\
+SIZEOF:= \'91sizeof\'92, LPAREN, VARIABLENAME, RPAREN\
+\
+\
+/****************************************************/\
+/****************************************************/\
+/**************\'94primitives(datatypes)\'94**************************/\
+\
+/***classs***/\
+\
+PRIMITIVE TYPE := SHORT | CHAR | LONG | BOOLEAN | INTEGER | DOUBLE | FLOAT | FIXED | \
+			UINT | USHORT | ULONG | REGISTER\
+\
+SHORT := \'91short\'92\
+\
+CHAR := \'91char\'92\
+\
+LONG := \'91long\'92\
+\
+BOOLEAN := \'91boolean\'92\
+\
+INTEGER := \'91integer\'92\
+\
+DOUBLE := \'91double\'92\
+\
+FLOAT := \'91float\'92\
+\
+FIXED = \'91fixed\'92\
+\
+UINT := \'91uint\'92\
+\
+USHORT := \'91short\'92\
+\
+ULONG := \'91along\'92\
+\
+REGISTER := \'91register\'92\
+\
+/***********************extern****************/\
+\
+EXTERN :=  STRING\
+\
+/***********************Enum****************]\
+\
+ENUM := \'91enum\'92, STRING, EQUALS, LBRACKET, ENUMS, RBRACKET\
+\
+ENUMS := STRING | ENUMS\
+\
+/**************Assigner*******************/\
+\
+ASSIGNER := \'91assigner\'92, STRING, EQUALS, LBRACKET, ASSIGNS, RBRACKET\
+ASSIGNS := ASSIGNS | STRING EQUALS WORD \
+\
+/*********CONTINUE*******************/\
+\
+CONTINUE := \'91continue\'92\
+\
+/**********Typedef**********************/\
+\
+TYPEDEF :=  \'91typedef\'92, TYPECLASS STRING\
+\
+\
+/******** EXP***********************/\
+\
+EXP := \'91Exp\'92, LPAREN, NUMERAL, COMMA, NUMERAL, RPAREN\
+\
+/*********ABS**********************/\
+\
+ABS := \'91Abs\'92, LPAREN, NUMERAL, RPAREN\
+\
+/*******EXTRA MATHOPS********************/\
+\
+MATHOPS := UNARYMATHOPS | BINARYMATHOPS | TWOTERMSOPONE, TWOTERMSOPTWO\
+\
+UNARYMATHOPS := CARROT | MINUS | PLUS | PERCENT | FACTORIAL | POSTFIXINCREMENT  			POSTFIXDECREMENT | PREFIXINCWEMENT | PREIXDECREMENT | BACKTICK			| FRONTTICK | ENDCLASS | ABS | INMETHOD | INCLASS, CAR, CDR\
+\
+BINARYMATHOIPS := SUM | PRODUCT | SUBTRACTION | DIVISION | INTEGERDIVISION | MOD | REM |\
+					SHIFTLEFT | SHIFTRIGHT | ASSIGNMENT | EQUALS | LESSTHAN\
+					| GREATERTHAN | LESSTHANOREQUAL | GREATERTHANOREQUAL |\
+					NOTEQUALTO | PLUSEQUALS | MINUSEQUALS | DIVISIONEQUALS |\
+					MULTIPLICATIONEQUALS | PERIOD | COMMAS, EXP, CONVO\
+\
+TWOTERMSOPONE := LBRACKET\
+TWOTERMSOPTWO := BRACKET\
+\
+\
+\
+\
+/********************CONTROL STRUCTURES********************/\
+\
+CONTROL STRUCTURES := IFELSE | DOWHILE | WHERE | UNTIL | FORITERATIVE | FOREACH | FOREACHSHORT |\
+					FORBUILTIN, LISTCOMPREHENSIONS, SHORTFOR, SHORTWHILE\
+\
+IFELSE := IF, RELATION, LBRACKET, TERM, RBRACKET, ELSEMAYBE,\
+\
+ELSE MAYBE := ELSEMAYBE | \'91else\'92, LBRACKET, TERM, RBRACKET | emptystring\
+\
+\
+DOWNHILL := DO, LBRACKET, TERM, RBRACKET, WHILE, RELATION\
+\
+WHERE := empty string | RELATION FUNCTION\
+\
+UNTIL := DO, LBRACKET, TERM, BRACKET, UNTILSYM, RELATION\
+\
+\
+FOR ITERATIVE := FOR, LPAREN, INSTANTIATE SEMICOLON, RELATION, SEMICOLON, RELATION, RPAREN, \
+				LBRACKET, TERM, RESIDUE, RBRACKET\
+\
+RESIDUE := empty string | \'91residue\'92\
+\
+RESIDE := VARIABLENAME | ASSIGN | \'91reside\'92\
+\
+\
+FOREACH := FOR, LPAREN, CLASSTYPE VARIABLENAME COLON VARIABLENAME RPAREN LBRACKET | 						LEAP, RESOLVE, TERM | 	RBRACKET\
+\
+RESOLVE:= empty string, \'91resolve\'92\
+\
+LEAP := empty string, \'91leap\'92\
+\
+FOREACHSHORT := FOREACH, VARIABLENAME, LBRACKET, TERM, RBRACKET\
+\
+FORBUILTIN := FOR , LPAREN, \'91Iterator\'92, CLASSTYPE, RPAREN, LBRACKET, TERM, RBRACKET\
+\
+LISTCOMPREHENSIONS := LBRACKET, FOR, VARIABLENAME, \'91in\'92, ,range, LPAREN, NUMERAL, RPAREN,\
+				FOR, VARIABLENAME, \'91in\'92 , \'91range\'92, LPAREN, NUMERAL, RPAREN, RBRACKET\
+				\
+\
+SHORTFOR := FOR, LPAREN, RELATIONSOPERATOR, NUMERAL, RPAREN, LBRACKET, TERM, RBACKET\
+\
+SHORTWHILE := WHILE, LPAREN, RELATIONSOPERATOR, NUMERAL, RPAREN, LBRACKET, TERM, RBRACKET\
+\
+ROUTER := ROUTER, RELATION, COLON, FUNCTION\
+\
+/************* SWITCH STATEMENT**********/\
+\
+SWITCH := \'91switch\'92, VARIABLENAME LBRACKET CASES\
+\
+CASES := CASE_BLOCK | CASES\
+\
+CASE_BLOCK := \'91case\'92\'92, LPAREN, VARIABLENAME, RPAREN, TERM, EXIT | PASS | BREAK\
+\
+SHORTSWITCH := \'91switch\'92 LPAREN, VARIABLENAME, RPAREN, SWITCHICASES\
+\
+SWITCH CASES := LBRACKET RELATIONALOPERAROE NUMERAL RBRACKET  LBRACKET,, RETURN \}\
+\
+BREAK:= \'91break\'92\
+EXIT := \'91exit\'92\
+PASS = \'91pass\'92\
+BRANCH := \'91branch\'92, LABEL\
+LABEL = ALPHANUMERIC\
+JUMP : = \'91jump\'92, ALPHANUMERIC\
+\
+/***************************LIST COMPREHNSIONS*****************/\
+\
+LIST COMPREHENSION:= LBRACKET INTEGER FOR VARIBLENAME IN VARIABLENAME IF RELATION RBRACKET\
+\
+FILTER:= FILTERKEYWORD VARIABLENAMAE | CLASSTYPE, \'91|\'92, CLASSTYPE | VARIABLENAME\
+/*******************CLASSES************************]/\
+\
+ANONINNERCLASS:= VARIABLENAME LPAREN NEW CLASS LBRACKET ANONYMOUS CLASS RBRACKET RPAREN\
+\
+INDEXINGINTOCLASS := CLASSNAME INDEXER\
+\
+INDEXER := LBRACKET FIELDNAME RBRACKET | INDEXER\
+\
+INNERCLASS := CLASS CLASSNAME CLASSHEADER LBRACE CLASSBODY RBRACE\
+\
+/*** NO BOXING***/\
+\
+UNBOXING := PRIMITIVE_TYPE EQUALS PRIMITIVE_TYPE\
+\
+/***** OBJECT OPERATORS********/\
+\
+ISOPERATOR := OBJECT_ONE IS OBJECT_TWO\
+\
+ISNOTOPERATOR = OBJECT_ONE ISNOT OBJECT_TWO\
+\
+ISNOTHING  = OBJECT_ONE IS NULL\
+\
+TYPEOF := OBJECT_ONE ISTYPEOF DATATYPE\
+\
+GET TYPE := RETURN SYSTEM_CLASS_INFO DATATYPE\
+\
+\
+\
+/**********MetaClasss***********/\
+/**********EntityPool*************/\
+\
+METACLASS := CLASSNAME GETENTITYPOOL\
+\
+/************Categories***************/\
+\
+\
+CATEGORY	:= PACKAGE LEFTEQUALSARROW FUNCTIONNAME\
+\
+/************PROTOTYPE INHERITANCE************/\
+\
+PROTOTYPEINHERITANCE := NEOIMAGE GOLDIMAGE\
+\
+\
+/**************EXPRESSION BODY METHODS***********/\
+\
+\
+EXPRESSIONBODYMETHODS := POOL RIGHTARROW VARIABLENAME RIGHTARROW LBRACE TERMS RBRACE\
+\
+/*****Abstract Methods has no implementation */\
+\
+ABSTRACT := \'91abstract\'92, FUNCTIONHEADER\
+\
+/******Constructor keyword*********/\
+\
+CONSTRUCTOR := \'91constructor\'92,\'92 ACCESSSMODIFIER DATATYPE, FUNCTIONHEADER TERMS\
+\
+/*********Type Constructor**********./\
+\
+TYPECONSTRUCT := POINTERARROW CLASSNAME | TYPECONSTRUCT\
+\
+/*********Data oConstrucetor*********./\
+\
+DATA CONSTRUCT := CLASSNAME FUNCTIONHEADER\
+\
+/**********SUPER*********/\
+\'91\
+SUPER := \'91super\'92\
+\
+/******STRING HEIRACHY*********/\
+\
+HIERARCHYSTRING := TYPENAME TYPEOPERATOR, $,  VARIABLENAME EQUALS STRINGVALUE\
+\
+/********ITratores*******************/\
+\
+ITERATORKEYWORD := LEFTANGLEBRACKET \'91Iterator\'92, RIGHTANGLEBRACKET ITERNAME EQUALS MYITERABLECLASS\
+ITERNAME := TERM\
+\
+FORLOOPWITHITERATOR := FOR LPARENT ITERNAME RPAREN FUNCTIONBODY\
+\
+/********is operator*************.\
+\
+ISOP := VARIABLENAME, \'91is\'92, CLASSNAME\
+\
+/*******inclusion keyword*********/\
+\
+INCLUSION KEYWORD := \'91inclusion\'92, VARIABLENAME, EQUALSOP, TERM\
+\
+/********AUTO PROPERTY FEATURE************/\
+\
+AUTOPROPERTYGET := ACCESSMODIFIER, DATATYPE, LEFTBRACE, GETOP, SEMICOLON, RIGHTBRACE, AUTOBEHAVIOR\
+AUTOBEHAVIOR : = DATATYPE, LEFTBRACE, LISTTERMS\
+\
+LISTTERMS := DOUBLEQUOTEST, VARIABLENAME, DOUBLEQUOTES | LISTTERMSE\
+\
+/**************TYPE SAFETY FOR FUNCTIONS**********/\
+\
+FUNCTIONTYPECONSTRUCTOR:= PARAMETERTYPES\
+PARAMETERTYPES:= PARAMETERTYPE | PARAMETERTYPES, SMALLRIGHTARROW\
+\
+/********REFLECTION**********/\
+\
+REFLECTION: \'91<?>\'92, VARIABLENAME, EQUALSOP, DATATYPE\
+\
+\
+ /********CHAINING DATATYPES**********/\
+\
+DATATYPECHAINEH := DATATYPECHAIN, DATATYPEOP\
+\
+GENERIC TYPE := DATATYPECHAIN VARIABLENAME EQUALSOP DATATYPECHAIN\
+\
+ANONTYPE := \'91<, TYPENAME, \'91>\'92\
+\
+\
+/*************MULTIPLE STATEMENTS ON ONE LINE*************/\
+\
+\
+MULTIFORM := TERM, TERM | \'91,\'92 MULTIFORM\
+\
+/***********ARRAYS************/\
+\
+ARRAY := 	ARRAYDATATYPE LBRACKET NUMERAL RBRACKET  TYPEOPERATOR VARIABLENAMW\
+		EQUALSOP LBRACEDLIST\
+\
+BRACEDLISET := LBRACE BLIST RBRACE\
+BRACED LIST :=  BL | BRACEDLIST\
+BLIST := ALPHANUMERAL \'93,\'94 | ALPHANUMERAL\
+\
+GETFROMLIST := VARIABLE NAM,E, LEFTBRACKET, NUMERAL, RIGHTBRACKET\
+\
+BRACKETEDLIST := LBRACKET BRACK RBRACKET\
+\
+BRACK := BR | BRACKETLIST\
+BR:= ALPHANUMERAL< \'91,\'92 | ALPHANUMERAL\
+\
+/**************STORING CODE IN AN ARRAY***************/\
+\
+CODEINANYARRAY := LBRACKET  NUMERAL RBRACKET TERMS\
+\
+/*************MULTIDIMENSIONAL ARRAYS****************/\
+\
+ARRAYTYPEIDENTIFIER = \'91<[]>\'92\
+ARRAYDOUBLETYPEID = \'91<[][]>\'92\
+\
+ARRAYTYPE := ARRAYTYPEIDENTIFIER VARIABLENAME EQUALSOP ARRAYTYPEIDENTIFIER\
+DOUBLE TYPE := ARRAYDOUBLETYPED VARIABLENAME EQUALS OP ARRAYDOUBLETYPED\
+\
+/****************OBLONG ARRAY***************************/\
+\
+/******FIRST, USING A FOR LOOP******************/\
+\
+OBLONG ARRAY := ARRAYNAME  LBRACKET RIGHT BRACKET EQUALSOP NEW DATATYPE LBRACKET RBRACKET\
+\
+/**********SECOND, DIRECT INSTANTIATION\
+\
+OBLONG DIRECT :-= ARRAYNAME EQUALS NEW TYPEOPERATOR DOUBLEARRAY\
+DOUBLEARRAY := LBRACKET NUMERAL RBRACKET LBRACKET NUNMERAL RIGHTBRACKET\
+\
+\
+/************MULTIDIMENSIONAL*********/\
+\
+MULTIDIMARRAY := ARRAYNAME EQUALS TYPENAME ARRAYINDICES\
+ARRAYINDICES := LBRACKET NUMERAL RBRACKET  | ARRAYINDICES\
+ \
+/**************INDEXERS****************/\
+/********USE [] NOTATION ON A CLASS ITSELF\
+INDEXER: ACCESSMODIFIERS \'92this\'92 [], EQUALS NEWOP ARRAYINDICES PROPERTIES\
+PROPERTIES: \'91get\'92, FUNCTION, \'92set\'92 FUNCTION\
+\
+\
+/***********PRIMARY CONSTRUCTORS ON CLASSESE*********/\
+\
+PRIMARY CONSTRUCTOR := CLASSNAME, CLASSTYPE,  PARAMS\
+\
+PARAMS := VARIABLENAME | \'91,\'92 VARIABLENAME\
+\
+/*********BASE KEYWORD**********/\
+\
+FUNCTION NAME EQUALS \'91base\'92         /******Function assignment******/\
+VARIABLENAME EQUALS \'91base\'92\
+\
+/*********NEW KEYWORD**************/\
+\
+/*****NEW INSTANTIATING MEMORY ON THE HEAP*********/\
+NEWOP := DATATYPE DATATYPEOPERATOR VARIABLENAME := \'91new\'92 DATATYPE\
+\
+  /*******NEW HIDING AN INHERITE MEMBER FROM A BASE CLASS*************/\
+\
+HIDE := \'91new\'92 VARIABLENAME\
+\
+//***********NEW - RESTRICTING DATA TYPES THAT MAY BE USED AS ARGUMENTS OFR \
+//**A TYPE PARAMETER******/\
+\
+RESTRICT NEW := VARIABLENAME \'91new\'92 DATATYPE\
+\
+/************TUPLES*************/\
+\
+\
+/***************SETS**************/\
+\
+\
+/*************NESTED TYPES*************/\
+\
+NESTED_TYPES := NESTED_TYPE | NESTED_TYPES\
+NETED_TYPE := DATATYPE | DATATYPE SMALLARROW\
+\
+/**************CROSS TYPING*************/\
+\
+CROSS_TYPES := DATATYPE VARIABLENAME ALPHANUMERAL\
+\
+/********SHALL KEYWORD**************/\
+\
+SHALL := DATATYPE TYPE OPERATOR VARIABLENAME \'91shall\'92 VARIABLENAME\
+\
+/*********EXTENSION METHODS********/\
+\
+EXTENSION METHOD := CLASSNAME \'91extend method\'92 FUNCTION\
+\
+/**********CALLER FEATURES*************/\
+\
+\
+CALLERFEATURE := FUNCTIONHEADER, \'91:\'92, \'91caller\'92, CALLERTYPES\
+\
+CALLER TYPES := CALLERCLASS | CALLERTYPES \
+CALLERCLASS := CLASSNAME | CLASSNAME ,\
+\
+/************MULTIPLE RETURN VALUES*********/\
+MULTIPLERETURN := \'91ret\'92, LPAREN, MRETURNVALUES RPAREN\
+MRETURNVALUE := DATATYPE VARIABLENAME | , MRETURNVALUE\
+\
+\
+\
+/********PROCEDURE KEYWORD*********/\
+\
+\
+PROCEDURE ::= \'91[\'91 PROCHEADER  PROCBODY \'92]\'92\
+\
+FUNCTIONHEADER ::= ACCESSMODIFIER SYNCHRONIZED EXPLICIT PROCNAME FUNCTIONPARAMS \
+\
+\
+FUNCTIONPARAMS ::= FUNCTIONNAME FUNCDATATYPE | FUNCTIONPARAMS \
+FUNCTIONDATATPE ::= DATATYPE | DATATYPE, WILDCARD\
+FUNCTION BODY ::= TERM\
+\
+\
+SYNCHRONIZED := \'91synchronized\'92 | empty string\
+/** synchronized causes function to take hold of a mutex while this function executes*/\
+\
+\
+\
+\
+/****************Not so messy pointers********/\
+\
+POINTERS := VARIABLENAME EQUALS ADDRESSEOFOPERATOR VARIABLENAME\
+\
+DEREF := ASTERISKS, VARIABLENAME, \'91.pointer\'92\
+\
+POINTER MATH := VARIABLENAME PLUS TYPENAME\
+POINTER MATH := VARIABLENAME PLUS VARIABLENAME\
+\
+\
+\
+/**************CUSTOM OPERATORS************/\
+\
+CUSTOMOP: ACCESSMODIFIER \'91operator\'92 LPAREN alpha RPAREN FUNCTIONBODY\
+\
+\
+/****************CALL BY REACTION*************/\
+\
+CALLBYREACTION := LBRACKET \'91callbyreaction\'92 RELATION FUNCTIONBODY\
+\
+\
+\
+\pard\pardeftab720\ri720\partightenfactor0
+\cf0 \
+/******************CAR AND CDR*******************/\
+\
+CAR := car VARIABLE | car FUNCTION | CAR\
+\
+CDR := cdr VARIABLE | car FUNCTION | CDR\
+\
+/***************PROMISES***************/\
+\
+PROMISE :=  VARIABLENAME \'91promise\'92 VARIABLENAME\
+\
+/*****************FUTURES**************/\
+\
+FUTURES := VARIABLENAME \'91future\'92 VARIABLENAME\
+\
+/*****************BUILT IN RECURSION********/\
+\
+BASERECUR :=  \'91base\'92 EQUALSOP FUNCTIONBODY\
+\
+TAILRECUR := \'91tail\'92 EQUALSOP FUNCTIONBODY\
+\
+\
+/******************STATEFUL******************/\
+\
+STAGEFUL :=       STAGEFUL VARB \'92tie\'92 OPERATOR\
+VARB		:=     VARIABLENAME EQUALS VARIABLENAME\
+ 			| VARIABLENAME | VARB\
+\
+\
+\
+/**********************LIKE OPERATOR AND REGEX***********/\
+\
+LIKEOP := VARIABLENAME LIKE REGEXSTRING\
+REGEXSTRING := ALPHANUMERAL\
+\
+\
+\
+}

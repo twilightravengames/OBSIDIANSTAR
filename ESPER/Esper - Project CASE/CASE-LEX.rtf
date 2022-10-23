@@ -1,0 +1,562 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf340
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww13460\viewh12920\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 %\{\
+#include <stdio.h>\
+#include "y.tab.h"\
+\
+int line_number = 0;\
+\
+void yyerror(char *message);\
+\
+%\}\
+\
+%x COMMENT1 COMMENT2\
+\
+	white_space       [ \\t]*\
+	digit             [0-9]\
+	alpha             [A-Za-z_]\
+	alpha_num         (\{alpha\}|\{digit\})\
+	hex_digit         [0-9A-F]\
+	identifier        \{alpha\}\{alpha_num\}*\
+	unsigned_integer  \{digit\}+\
+	hex_integer       $\{hex_digit\}\{hex_digit\}*\
+	exponent          e[+-]?\{digit\}+			\
+	i                 \{unsigned_integer\}\
+	real              (\{i\}\\.\{i\}?|\{i\}?\\.\{i\})\{exponent\}?\
+	string            \\'([^'\\n]|\\'\\')+\\'\
+	bad_string        \\'([^'\\n]|\\'\\')+\
+\
+\
+	%%\
+	\'91.app\'92		\{ return APP_EXTENSION\}\
+	\'93$\'94		\{ return VARIABLE_PREFIX \}\
+	\'93->\'94		\{ return TYPE_POINTER \}\
+	\'93=\'93		\{ return ASSIGNMENT \}\
+	\'93~\'94		\{ return SHALLOWCOPY\}\
+	\'93!=\'93		\{ return DOESNTEQUAL\}\
+	\'93<\'93		\{ return LESSTTHAN \}\
+	\'93>\'94		\{ return GREATERTHAN \}\
+	\'93>=\'93		\{ return GREATEREQUALTHAN\}\
+	\'93<=\'93		\{ return LESSTHANEQUALTHAN\}\
+	\'93[\'93		\{ return LBRACKET \}\
+	\'93]\'94		\{ return RBRACKET \}\
+	\'93\{\'93		\{ return LBRACE \}\
+	\'93\}\'94		\{return RBRACE \}\
+	\'93(\'93		\{return LPAREN \}\
+	\'93)\'94		\{return RPAREN \}\
+	\'93@\'93		\{return ANNOTATOR \}\
+	\'93|\'94		\{ return PIPE \}\
+	\'93#\'94		\{ return HASHTAG \}\
+	\'93;\'94		\{ return SEMICOLON \}\
+	\'93++\'94		\{ return INCREMENTER \}\
+	\'93\'97\'93		\{ return DECREMENTER \
+	\'93+=\'93		\{ return ASSIGNEQUALS \}\
+	\'93-=\'93		\{ return SUBTRACTEQUALS \}\
+	\'93/=\'93		\{ return DIVISIONEQUALS\}\
+	\'93*=\'93		\{ return MUTLIPLICATIONEQUALS\}\
+	\'93,\'94		\{ return COMMAOPERATOR \}\
+	\'93()\'94		\{ return EMPTYPARAMETER \}\
+	\'93<>\'94		\{ return GENERICTYPE\}\
+	\'93:\'94		\{ return MESSAGECOLONOP \}\
+	\'93==\'93		\{ return EQUALS \}\
+	\'93??\'94		\{ return DOUBLENULLS \}\
+	\'93_\'94		\{ return WILDCARD \}\
+	\'93//\'93		\{ return LINECOMMENT \}\
+	\'93/*\'94		\{ return BLOCKOPEN \}\
+	\'93*/\'93		\{ return BLOCKEND \}\
+\
+	\'93/**\'94		\{ return AUTODOCOPEN \}\
+	\'93**/\'93		\{ return AUTODOCCLOSE \}\
+	\
+	\'93^\'94		\{ return EXPONENT \}\
+	\'93-\'93		\{ return MINUS\}\
+	\'93+\'94		\{ return PLUS \}\
+	\'93div\'94		\{ return INTEGERDIV\}\
+	\'93/\'93		\{ return FLOATINGDIV \}\
+	\'93*\'94		\{ return MULTIPLICATION \}\
+	\'93mod\'94		\{ return MODULOOPERATOR\}\
+	\'93rem\'94		\{ return REMAINDEROPERATOR\}\
+	\'93%\'94		\{ return PERCENTOPERATOR\}\
+	\'93(<<)\'94		\{return SHIFTLEFTOPERATOR\}\
+	\'93(>>)\'94		\{return SHIFTRIGHTOPERATOR\}\
+	\'93!\'94		\{return FACTORIAL\}\
+	\'93`\'94		\{return BACKTICK \}\
+	\'93\'91\'93		\{return FRONTTICK \}\
+	\'93.\'94		\{return DOTOPERATOR\}\
+	\'93exp\'94		\{return EXPONENTIAL\}\
+	\'93abs\'94		\{return ABSOLUTEVALUE\}\
+	\'93<==\'93		\{return CATEGORIESINJECTOR\}\
+	\'93==>\'94		\{return EXPRESSIONBODYMETHOD\}\
+	\'93<?>\'94		\{return UNKOWNTYPEOPERATOR\}\
+	\'93<T>\'94		\{return GENERICTEMPLATEOP\}\
+	\'93||\'94		\{return DOUBLEBAROPERATOR\}\
+	\'93[]\'94		\{return UNKNOWNNUMBERELEMENTS\}\
+	\'93/|\'94		\{return OPENPIPEOPERATOR\}\
+	\'93\\\'94		\{return ENDPIPEOPERATOR\}	\
+	\'93(\'93		\{ return LEFTPARAN \}\
+	\'93)\}		\{ return RIGHT PARAN \}\
+\
+\
+\
+	\'93Console\'94	\{return CONSOLE\}\
+	\'93Read\'94	\{return READ\}\
+	\'93ReadLine\'94 	\{return READLINE\}\
+	\'93.WriteLine\'94	\{return WRITELINEOPERATOR\}\
+	\'93Write\'94		\{return WRITEOPERATOR\}\
+	\'93toString\'94	\{ return TOSTRING\}\
+	\'93fromString\'94	\{ return FROMSTRING\}\
+	\'93convert\'94	\{ return CONVERT\}\
+\
+	\'93EntityPool\'94	\{ return ENTITYPOOL \}\
+	\'93.getEntityPool\'94	\{return GETENTITYPOOL\}\
+	\'93.getStreamMemory\'94	\{return GETSTREAMMEMORY\}\
+	\'93stream\'94	\{ return STREAM \}\
+	\'93pool.targetMessage()\'94	\{ return RECEIVEMESSAGE \}\
+	\'93pool\'94		\{return POOL\}\
+	\'93Print\'94		\{ return PRINTSTATEMENT \}\
+	\'93Printbug\'94	\{ return PRINTBUG \}\
+	\'93Scan\'94		\{ return SCAN\}\
+\
+	\'93assert\'94	\{ return ASSERT\}\
+\
+\
+	\'93.get\'94		\{ return GETOPERATOR \}\
+	\'93.set\'94		\{ return SETOPERATOR \}\
+	\'93get\'94		\{ return GETPROPERTY \}\
+	\'93set\'94		\{ return SETPROPERTY\}	\
+	\'93.run\'94		\{ return RUNOPERATOR\}\
+\
+	\'93.class\'94	\{ return GETMETACLASS\}\
+\
+	\'93scope\'94	\{ return SCOPE \}\
+	\
+	\'93@application\'94	\{return EMBEDDINGAPPLICATION \}\
+	\'93@optional\'94	\{return OPTIONAL\}\
+	@required\'94	\{return REQUIRED\}\
+\
+	\'93public\'94	\{ return PUBLICMODIFIER \}\
+\
+	\'93private\'94	\{return PRIVATEMODIFIER\}\
+\
+	\'93package\'94	\{return PACKAGEMODIFIER\}\
+\
+	\'93internal\'94	\{return INTERNALMODIFIER\}\
+\
+	\'93protected\'94	\{return PROTECTEDMODIFIER\}\
+\
+	\'93shall\'94		\{return SHALL\}\
+\
+	\'93friend\'94	\{return FRIEND\}\
+\
+	\'93trust\'94		\{return TRUST\}\
+\
+	\'93constructor\'94 \{ return CONSTRUCTORKEYWORD \}\
+\
+	\'93forName\'94	\{return FORENAME\}\
+\
+	\'93atom\'94		\{ return ATOM \}\
+\
+	\'93void\'94		\{ return VOIDTYPE \}\
+\
+	\'93short\'94		\{return SHORT \}\
+\
+	\'93char\'94		\{return CHAR \}\
+\
+	\'93long\'94		\{return LONG\}\
+\
+	\'93boolean\'94	\{return BOOLEAN \}\
+\
+	\'93integer\'94	\{return INTEGER \}\
+\
+	\'93double\'94	\{return DOUBLE \}\
+\
+	\'93float\'94		\{return FLOAT \}\
+\
+	\'93fixed\'94		\{return FIXED \}\
+\
+	\'93uint\'94		\{return UINT \}\
+	\
+	\'93ushort\'94	\{return USHORT \}\
+\
+	\'93ulong\'94	\{return ULONG\}\
+\
+	\'93register\'94	\{ return REGISTER \}\
+\
+	\'93extern\'94	\{ return EXTERN \}	\
+\
+\pard\pardeftab720\ri720\partightenfactor0
+\cf0 	\'93collection\'94	\{ return COLLECTION \}\
+	\'93set\'94		\{return SET\}\
+	\'93array\'94		\{return ARRAY\}\
+	\'93arrayList\'94	\{return ARRAYLIST\}\
+	\'93linkedList\'94		\{return LINKEDLIST\}\
+	\'93doublyLinkedList\'94	\{return DOUBLYLINKEDLIST\}\
+	\'93doublyLinkedArrayList\'94	\{return DOUBLYLINKEDARRAYLIST\}\
+	\'93matrix\'94		\{ return MATRIX \}\
+	\'93vector\'94		\{ return VECTOR\}\
+	\'93hashTable\'94		\{ return HASHTABLE\}\
+	\'93hashMap\'94		\{return HASHMAP\}\
+	\'93map\'94		\{ return MAP\}\
+	\'93multiMap\'94	\{return MULTIMAP\}\
+	\'93string\'94	\{return STRING\}\
+	\'93object	\{return OBJECT \}\
+\
+	\'93list\'94		\{ return LIST\}\
+	\'93tree\'94		\{ return TREE\}\
+	\'93stack\'94	\{ return STACK \}\
+	\'93queue\'94	\{ return QUEUE\}\
+	\'93sort\'94		\{return SORT\}\
+	\'93container\'94	\{return CONTAINER\}\
+	\'93sortedSet\'94	\{return SORTEDSET\}\
+	\'93sortedMap\'94	\{return SORTEDMAP\}\
+	\'93hashSet\'94	\{return HASHSET\}\
+	\'93treeSet\'94	\{return TRUEST\}\
+	\'93binarySearchTree\'94 \{return BINARYSEARCHTREE\}\
+	\'93redBlackTree\'94	\{return REDBLACKTREE\}\
+	\'93abstractCollection\'94	\{return ABSTRACTCOLLECTION\}\
+	\'93priorityQueue\'94	\{return PRIORITYQUEUE\}\
+	\'93priortyBlockingQueue\'94	\{return PRIORITYBLOCK\}\
+\
+	\'93iterator\'94	\{return ITERATOR\}\
+\
+	\'93convo\'94	\{return CONVO \}\
+\
+	\'93car\'94		\{ return CAR\}\
+\
+	\'93cdr\'94		\{return CDR\}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+	\'93return\'94	\{ return RETURN \}\
+\
+	\'93#end class\'94	\{return ENDCLASS \}\
+\
+	\'93enum\'94	\{return ENUM \}\
+\
+	\'93assigner\'94	\{return ASSIGNER \}\
+\
+	\'93parallel\'94	\{return PARALLELKEY\}\
+\
+	\'93compiled\'94	\{return ASSEMBLYINCLUDE\}\
+\
+	\'93package\'94	\{ return PACKAGE \}\
+\
+	\'93import\'94	\{ return IMPORT \}\
+\
+	\'93class\'94 	\{return CLASSDEFINITION \}\
+\
+	\'93struct\'94	\{return STRUCT \}\
+\
+	\'93#end struct\'94	\{return ENDSTRUCT\}   \
+\
+	\'93typedef\'94	\{return TYPEDEF\}\
+\
+	\'93union\'94	\{return UNION\}\
+\
+	\'93extends\'94	\{ return EXTENDS \}\
+\
+	\'93implements\'94 \{ return IMPLEMENTS \}\
+\
+	\'93inherits\'94 	\{ return INHERITS\}\
+\
+	\'93inMethod\'94	\{ return MEMBERSHIPINMETHOD \}\
+\
+	\'93inClass\'94	\{ return MEMBERSHIPINYCLASS\}\
+\
+	\'93abstract\'94	\{return ABSTRACT\}\
+\
+	\'93construct\'94 	\{return CONSTRUCT\}\
+\
+	\'93SizeOf\'94	\{ return SIZEOF \}\
+\
+	\'93native\'94	\{ return NATIVE \}\
+\
+	\'93requires\'94 	\{return REQUIRES \}\
+\
+	\'93satisfies\'94 	\{return SATISFIES\}\
+\
+	\'93native\'94	\{return NATIVE \}\
+\
+	\'93for\'94		\{return FORKEYWORD \}\
+	\
+	\'93release\'94	\{return RELEASE\}\
+	\'93@retain\'94	\{return RETAIN \}\
+	\'93@autorelease\'94 	\{return AUTORELEASE \}\
+\
+	\'93try\'94	\{ return TRY \}\
+	\'93catch\'94 	\{return CATCH \}\
+	\'93finally\'94	\{ return FINALLY\}\
+\
+	\'93last\'94		\{return LAST\}\
+	\'93await\'94	\{return AWAIT\}\
+	\'93autofill\'94	\{return AUTOFALL\}\
+	\'93tag\'94		\{return TAG\}\
+\
+	\'93frozen\'94	\{return FROZEN\}\
+	\'93thaw\'94		\{return THAW\}\
+\
+	\'93diagram:	\{return DIAGRAM\}\
+	\
+	\'93inline\'94	\{return INLINE\}\
+\
+	\'93byte code\'94	\{return BYTECODE\}\
+\
+	\'93null\'94		\{return NULL\}\
+\
+	\'93as\'94		\{return AS\}\
+	\'93lambda\'94	\{return LAMBDA\}\
+	\'93global\'94	\{return GLOBAL\}\
+\
+	\'93del\'94		\{return DEL\}\
+	\'93pass\'94		\{return PASS\}\
+	\
+	\'93commandExecute\'94	\{return COMMANDEXECUTE \}\
+\
+	\'93goto\'94		\{return GOTO\}\
+\
+	\'93true\'94		\{return TRUE\}\
+	\'93false\'94		\{return FALSE\}\
+\
+	\'93wait\'94		\{return WAIT \}\
+\
+	\'93success\'94	\{return SUCCESS\}\
+\
+	\'93throw\'94	\{return THROW\}\
+\
+	\'93throws\'94	\{return THROWS\}\
+\
+	\'93@texts:\'94	\{return TEXTLITERAL \}\
+\
+	\'93lock\'94		\{return LOCK \}\
+\
+	\'93synchronized\'94	\{return SYNCHRONIZED\}\
+\
+	\'93this\'94		\{return THIS \}\
+\
+	\'93namespace\'94	\{return NAMESPACE\}\
+	\
+	\'93auto\'94		\{return AUTO\}\
+\
+	\'93sealed\'94	\{return SEALED\}\
+\
+	\'93static\'94	\{return STATIC\}\
+	\
+	\'93final\'94		\{return FINAL\}\
+	\'93global\'94	\{return GLOBAL\}\
+\
+	\'93( c )\'94		\{ return CONCATOP \}\
+	\'93( m )\'94		\{return SUBTRACTOP\}\
+	\
+	\'93volatile\'94	\{ return VOLATILE \}\
+\
+	\'93continue\'94	\{return CONTINUE \}\
+\
+	\'93if\'94		\{return IF\}\
+	\'93else\'94		\{return ELSE\}\
+	\'91do\'94		\{return DO\}\
+	\'93while\'94		\{return WHILE\}\
+	\'93where\'94	\{return WHERE\}\
+	\'93until\'94		\{return UNTIL\}\
+	\'93residue\'94	\{return RESIDUE\}\
+	\'93reside\'94	\{return RESIDE)\
+	\'93resolve\'94	\{return RESOLVE\}\
+	\'93leap\'94		\{return LEAP\}\
+	\'93foreach\'94	\{return FOREACH\}\
+\
+	\'93in\'94		\{return IN\}\
+	\'93range\'94	(return RANGE\}\
+\
+	\'93router\'94	\{return ROUTER\}\
+	\'93switch\'94	\{return SWITCH\}\
+	\'93case\'94		\{return CASE\}\
+\
+	\'93exit\'94		\{return EXIT\}\
+	\'93pass\'94		\{return PASS\}\
+	\'93break\'94	\{return BREAK\}\
+	\'93fall\'94		\{return FALL\}\
+\
+	\'93return\'94	\{return RETURN\}\
+\
+	\'93branch\'94	\{return BRANCH\}\
+	\'93label\'94		\{return LABEL\}\
+\
+	\'93jump\'94		\{return JUMP\}\
+\
+	\'93len\'94		\{return LENGTH\}\
+\
+	\'93filter\'94		\{return FILTER\}\
+	\
+	\'93new\'94		\{return NEW\}\
+	\
+	\'93Is\'94		\{return IS\}\
+\
+	\'93IsNot\'94	\{return ISNOT\}\
+\
+	\'93IsNothing\'94	\{return ISNOTHING\}\
+	\
+	\'93TypeOff\'94	\{return TYPEOF\}\
+\
+	\'93InstanceOf\'94	\{return INSTANCEOF\}\
+\
+	\'93GetType\'94	\{return GETTYPE\}\
+\
+	\'93inherit\'94	\{return PROTOTYPEINHERITANCE\}\
+\
+	\'93explicit\'94	\{return EXPLICIT\}\
+\
+	\'93super\'94	\{return SUPER\}\
+\
+	\'93inclusion\'94	\{return INCLUSION\}\
+\
+	\'93rename\'94	\{return RENAME\}\
+\
+	\'93base\'94		\{return BASE\}\
+\
+	\'93return\'94	\{return RETURN\}\
+\
+	\'93ret\'94		\{return MULTIRETURN\}\
+\
+	\'93procedure\'94	\{return PROCEDURE\}\
+\
+	\'93function\'94	\{return FUNCTION\}\
+\
+	\'93target\'94	\{return TARGET\}\
+\
+	\'93virtual\'94	\{return VIRTUAL\}\
+\
+	\'93delegate\'94	\{return DELEGATE\}\
+\
+	\'93explicit\'94	\{return EXPLICIT\}\
+\
+	\'93const\'94	\{return CONST\}\
+\
+\
+\
+	\'93%i\'94		\{return INTEGERFORMAT \}\
+	\'93%d\'94		\{return DECIMALFORMAT\}\
+	\'93%u\'94		\{return UDECIMALFORMAT\}\
+	\'93%o\'94		\{return OCTALFORMAT\}\
+	\'93%x\'94		\{return HEXFORMAT \}\
+	\'93%f\'94		\{return FLOATFORMAT\}\
+	\'93%e\'94		\{return EFLOATFORMAT\}\
+	\'93%g\'94		\{return GFLOATFORMAT\}\
+	\'93%a\'94		\{return AFLOATFORMAT\}\
+	\'93%c\'94		\{return CHARFORMAT\}\
+	\'93%s\'94		\{return STRINGFORMAT\}\
+	\'93%p\'94		\{return POINTERFORMAT\}\
+	\'93%[\'93		\{return SCANSETFORMAT\}\
+	\'93%[^\'94		\{return NEGATDSCANSETFORMAT\}\
+	\'93%n\'94		\{return COUNTFORMAT\}\
+	\'93%%\'94		\{return MATCHPERCENTFORMAT\}\
+\
+	\'93\\t\'94		\{return TABESCAPE\}\
+	\'93\\b\'94		\{return BACKSPACEESCAPE\}\
+	\'93\\n\'94		\{return NEWLINEESCAPE\}\
+	\'93\\r\'94		\{return CARRIAGERETURNESCAPE\}\
+	\'93\\f\'94		\{return FORMFEEDESCAPE\}\
+	\'93\'91\'92\'94		\{return SINGLEQUOTEESCAPE\}\
+	\'93\\\'94\'94		\{return DOUBLEQUOTEESCAPE\}\
+	\'93\\\\\'94		\{return BACKSLASHESCAPE\}\
+	\'93\\A\'94		\{return ALARMESCAPE\}\
+	\'93\\t\'94		\{return HORIZTABESCAPE\}\
+	\'93\\y\'94		\{return VERTICALTABESCAPE\}\
+	\'93\\?\'94		\{return QUOTATONESCAPEF\}\
+	\
+\
+	\'93deep\'94		\{return DEEPCOPY\}\
+	\'93need\'94		\{return PASSBYNEED\}	\
+	\'93operator\'94	\{return OPERATOROVERLOAD\}\
+	\
+\
+	\'93PublishQueue\'94	\{return PUBLISHQUEUE\}\
+	\'93subscribe\'94	\{return SUBSCRIBEMESSAGE\}\
+	\'93.recieveEvent\'94	\{return RECEIVEMESSAGE\}\
+	\'93option\'94	\{return OPTION\}\
+	\
+	\'93SubscriberQueue\'94	\{return SUBSCRIBERQUEUE\}\
+	\'93publisher\'94	\{return PUBLISHER\}\
+\
+	\'91callbyreaction\'94 \{return CALLBYREACTION\}\
+\
+	\'93const\'94	\{return CONST\}\
+\
+	\'93cons\'94		\{return CONS\}\
+	\
+	\'93promise\'94	\{return PROMISE\}\
+\
+	\'93base\'94		\{return BASE\}\
+	\'93tail\'94		\{return TAIL\}\
+	\
+	\'93@controller\'94	\{return CONTROLLERANNOTATION\}\
+	\
+	\'93bind\'94		\{ return BINDINGSYNC\}\
+	\'93onewaybind\'94	\{return ONEWAYBINDSYNC\}\
+	\
+	\'93singleton\'94	\{ return SINGLETON \}\
+\
+	\'93flux\'94		\{ return FLUX \}\
+\
+	\'93stateful\'94	\{return STATEFUL\}\
+\
+	\'93tie\'94		\{return TIE\}\
+	\'93equiv\'94	\{return EQUIV\}\
+\
+\
+\
+	\'93Database\'94	\{return DATABASE\}\
+\
+	\'93.inject	\'93	\{return INJECTDATABASE\}\
+	\
+	\'93@Table\'94	\{return DOMCLASSTABLE\}\
+\
+	\'93.update\'94	\{return UPDATEDATABASE\}\
+	\
+	\'93transient\'94	\{return TRANSIENT\}\
+\
+	\'93True\'94		\{return TRUE\}\
+	\'93False\'94	\{return FALSE\}\
+	\'93Not\'94		\{return NOT\}\
+	\'93IsTrue\'94	\{return ISTRUE\}\
+	\'93IsFalse\'94	\{return ISFALSE\}\
+	\'93And\'94		\{return AND\}\
+	\'93Or\'94		\{return OR\}\
+	\'93Xor\'94		\{return XOR\}\
+	\'93NotOr\'94	\{return NOTOR\}\
+	\'93NotAnd\'94	\{return NOTAND\}\
+	\'93Like\'94		\{return LIKE\}\
+\
+	\'93&\'94		\{return BITWISEAND\}\
+	\'93|\'94		\{return BITWISEOR\}\
+	\'93\\|\'94		\{return BITWISEXOR\}\
+	\'93==\'93		\{return BOOLEANEQUALS\}\
+	\'93Also\'94		\{return ALSOOPERATOR\}\
+	\'93isLetter\'94		\{return ISLETTER\}\
+	\'93isDigit\'94		\{return ISDIGIT\}\
+	\'93isWhiteSpace	\{return ISWHITESPACE\}\
+	\'93isUppercase\'94	\{return ISUPPERCASE\}\
+	\'93isLowercase\'94	\{return ISLOWERCASE\}\
+	\'93toUppercase\'94	\{return TOUPPERCASE\}\
+	\'93toLowercase\'94	\{return TOLOWRCASE\}\
+	\'93toString\'94		\{return TOSTRING\}\
+	\'93implicit\'94		\{return CUSTOMIMPLICITOP\}\
+\
+	\'93at\'94			\{return ATNEGATIVEINDEXING\}\
+	\'93::\'94			\{ return NEGATIVEINDEXING\}\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs18 \cf0 \expnd0\expndtw0\kerning0
+ 	
+\f0\fs24 \
+  	  \\	 	            \{ ; \}\
+            \\n     			  \{ nextline(); \}\
+             \\t    	  		 \{ ; \}\
+            "//".*\\n 		\{ nextline(); \}\
+   .       			 \{ yyerror("illegal token"); \}\
+   %%\
+   #ifndef yywrap\
+   yywrap() \{ return 1; \}\
+   #endif\kerning1\expnd0\expndtw0 \
+}
